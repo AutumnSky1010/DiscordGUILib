@@ -1,12 +1,13 @@
 ﻿using Discord;
+using Discord.WebSocket;
 
 namespace DiscordGUILib.Components;
 public class SelectedEventArgs
 {
-    public SelectedEventArgs(PaginationMenu menu, PaginationMenuItem selected, IInteractionContext context)
+    public SelectedEventArgs(PaginationMenu menu, PaginationMenuItem selected, SocketMessageComponent component)
     {
         this.SelectedItem = selected;
-        this.Context = context;
+        this.Component = component;
         this.PaginationMenu = menu;
     }
 
@@ -14,5 +15,5 @@ public class SelectedEventArgs
 
     public PaginationMenu PaginationMenu { get; }
 
-    public IInteractionContext Context { get; }
+    public SocketMessageComponent Component { get; }
 }

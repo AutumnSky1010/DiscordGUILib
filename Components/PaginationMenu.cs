@@ -1,66 +1,47 @@
 ﻿using Discord;
+using Discord.WebSocket;
 using DiscordGUILib.Modules;
 
 namespace DiscordGUILib.Components;
-public class PaginationMenu
+public class PaginationMenu : ComponentBase
 {
     public delegate Task SelectedEventHandler(SelectedEventArgs args);
 
     internal SelectedEventHandler? SelectedHandler;
 
-    public delegate Task CanceledEventHandler(PaginationMenu paginationMenu, IInteractionContext context);
+    public delegate Task CanceledEventHandler(PaginationMenu paginationMenu, SocketMessageComponent component);
 
     internal CanceledEventHandler? CanceledHandler;
 
-    public delegate Task ErrorEventHandler(IInteractionContext context);
-
     internal static ErrorEventHandler? OnErrorHandler;
+
+    public static event ErrorEventHandler OnError
+    {
+        add => OnErrorHandler += value;
+        remove => OnErrorHandler -= value;
+    }
 
     public event CanceledEventHandler OnCanceled
     {
-        add
-        {
-            this.CanceledHandler += value;
-        }
-        remove
-        {
-            this.CanceledHandler -= value;
-        }
+        add => this.CanceledHandler += value;
+        remove => this.CanceledHandler -= value;
     }
 
     public event SelectedEventHandler OnSelected
     {
-        add
-        {
-            this.SelectedHandler += value;
-        }
-        remove
-        {
-            this.SelectedHandler -= value;
-        }
+        add => this.SelectedHandler += value;
+        remove => this.SelectedHandler -= value;
     }
 
-    public static event ErrorEventHandler OnError
+    public PaginationMenu(string componentId, IReadOnlyList<PaginationMenuItem> items)
     {
-        add
-        {
-            OnErrorHandler += value;
-        }
-        remove
-        {
-            OnErrorHandler -= value;
-        }
-    }
-
-    public PaginationMenu(string id, IReadOnlyList<PaginationMenuItem> items)
-    {
-        this.Id = id;
+        this.ComponentId = componentId;
         this.MenuItems = items;
-        MenuCommandReciever.Register(id, this);
+        PaginationMenuReceiver.Register(componentId, this);
         this.OnSelected += async (args) => { };
     }
 
-    public string Id { get; }
+    public string ComponentId { get; }
 
     public string CancelLabel { get; set; } = "cancel";
 
@@ -95,7 +76,10 @@ public class PaginationMenu
 
         var menuBuilder = new SelectMenuBuilder()
         {
-            CustomId = MenuCommandReciever.ON_SELECTED_ID,
+            CustomId = GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
+                PaginationMenuReceiver.ON_SELECTED_ID, 
+                this.ComponentId)
+                .ToString(),
         };
 
         int itemsStartIndex = index * this.CountPerPage;
@@ -122,12 +106,16 @@ public class PaginationMenu
         builder.WithSelectMenu(menuBuilder);
         if (index != 0)
         {
-            builder.WithButton($"{index}", MenuCommandReciever.PREVIOUS_MENU_ID);
+            builder.WithButton($"{index}", GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
+                PaginationMenuReceiver.PREVIOUS_MENU_ID,
+                this.ComponentId).ToString());
         }
         builder.WithButton(this.GetNowPageButton(index));
         if (index != this.PageCount - 1)
         {
-            builder.WithButton($"{index + 2}", MenuCommandReciever.NEXT_MENU_ID);
+            builder.WithButton($"{index + 2}", GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
+                PaginationMenuReceiver.NEXT_MENU_ID,
+                this.ComponentId).ToString());
         }
         return builder;
     }
@@ -137,7 +125,7 @@ public class PaginationMenu
         var button = new ButtonBuilder().WithLabel($"{Emoji.Parse(":notepad_spiral:")}{index + 1}/{this.PageCount}");
         button.IsDisabled = true;
         button.Style = ButtonStyle.Danger;
-        button.CustomId = this.Id;
+        button.CustomId = this.ComponentId;
         return button;
     }
 
