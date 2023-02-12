@@ -1,14 +1,12 @@
-﻿using Discord.Interactions;
+﻿using Discord;
 using Discord.WebSocket;
-using Discord;
 using DiscordGUILib.Components;
 using DiscordGUILib.Modules.Attributes;
-using System.ComponentModel;
 
 namespace DiscordGUILib.Modules;
 
 [ComponentModule("pagination")]
-public class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
+internal class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
 {
 
     public const string NEXT_MENU_ID = "next";
@@ -16,15 +14,15 @@ public class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
     public const string PREVIOUS_MENU_ID = "prev";
 
     public const string ON_SELECTED_ID = "on_select";
-    
+
 
     [ComponentReceiver(NEXT_MENU_ID)]
     public async Task OnClickNext(SocketMessageComponent component)
-        => await this.ChangeQuizMenuPage(component, NEXT_MENU_ID);
+        => await ChangeQuizMenuPage(component, NEXT_MENU_ID);
 
     [ComponentReceiver(PREVIOUS_MENU_ID)]
     public async Task OnClickPrevious(SocketMessageComponent component)
-        => await this.ChangeQuizMenuPage(component, PREVIOUS_MENU_ID);
+        => await ChangeQuizMenuPage(component, PREVIOUS_MENU_ID);
 
     [ComponentReceiver(ON_SELECTED_ID)]
     public async Task OnSelected(SocketMessageComponent component)
@@ -32,7 +30,7 @@ public class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
         string id = string.Join(',', component.Data.Values);
         if (!TryGetClickedMenu(component, out var menuNullable) || menuNullable is null)
         {
-            await this.OnErrorAsync(component);
+            await OnErrorAsync(component);
             return;
         }
 
@@ -46,7 +44,7 @@ public class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
 
         if (!menuNullable.TryGetItem(id, out var itemNullable) || itemNullable is null)
         {
-            await this.OnErrorAsync(component);
+            await OnErrorAsync(component);
             return;
         }
 
@@ -83,13 +81,14 @@ public class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
             }
         }
 
-        if (!this.TryGetClickedMenu(component, out var menuNullable) || menuNullable is null)
+        if (!TryGetClickedMenu(component, out var menuNullable) || menuNullable is null)
         {
             return;
         }
 
         await component.DeferAsync();
-        await component.Message.ModifyAsync(msg => {
+        await component.Message.ModifyAsync(msg =>
+        {
             msg.Components = menuNullable.GetComponentBuilder(int.Parse(buttonLabel) - 1).Build();
             msg.Content = component.Message.Content;
         });

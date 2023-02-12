@@ -1,14 +1,6 @@
-﻿using Discord;
-using Discord.Interactions;
-using Discord.WebSocket;
-using DiscordGUILib.Modules;
+﻿using Discord.WebSocket;
 using DiscordGUILib.Modules.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordGUILib;
 public class GUIModuleInitializer
@@ -40,7 +32,7 @@ public class GUIModuleInitializer
     private static async Task Executed(SocketMessageComponent arg)
     {
         var id = GUILibCustomIdFactory.CreateFromString(arg.Data.CustomId);
-        if (!NameModulePairs.TryGetValue(id.ModuleName, out Type? moduleType) || 
+        if (!NameModulePairs.TryGetValue(id.ModuleName, out Type? moduleType) ||
             moduleType is null)
         {
             return;

@@ -1,17 +1,11 @@
-﻿using Discord.Interactions;
-using Discord.WebSocket;
+﻿using Discord.WebSocket;
 using DiscordGUILib.Components;
 using DiscordGUILib.Modules.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordGUILib.Modules;
 
 [ComponentModule("toggleButton")]
-public class ToggleButtonReceiver : ReceiverBase<ToggleButton>
+internal class ToggleButtonReceiver : ReceiverBase<ToggleButton>
 {
     public const string CHECKED_ID = "checked";
 
@@ -20,7 +14,7 @@ public class ToggleButtonReceiver : ReceiverBase<ToggleButton>
     [ComponentReceiver(CHECKED_ID)]
     public async Task Checked(SocketMessageComponent component)
     {
-        var buttonNullable = await this.Toggle(component.Data.CustomId, component);
+        var buttonNullable = await ToggleAsync(component.Data.CustomId, component);
         if (buttonNullable is not null &&
             buttonNullable.CheckedHandler is not null)
         {
@@ -31,7 +25,7 @@ public class ToggleButtonReceiver : ReceiverBase<ToggleButton>
     [ComponentReceiver(UNCHECKED_ID)]
     public async Task Unchecked(SocketMessageComponent component)
     {
-        var buttonNullable = await this.Toggle(component.Data.CustomId, component);
+        var buttonNullable = await ToggleAsync(component.Data.CustomId, component);
         if (buttonNullable is not null &&
             buttonNullable.UncheckedHandler is not null)
         {
@@ -39,7 +33,7 @@ public class ToggleButtonReceiver : ReceiverBase<ToggleButton>
         }
     }
 
-    private async Task<ToggleButton?> Toggle(string customId, SocketMessageComponent component)
+    private async Task<ToggleButton?> ToggleAsync(string customId, SocketMessageComponent component)
     {
         var id = GUILibCustomIdFactory.CreateFromString(customId);
         if (!IdComponentPairs.TryGetValue(id.ComponentId, out ToggleButton? button) ||

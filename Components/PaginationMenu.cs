@@ -33,15 +33,12 @@ public class PaginationMenu : ComponentBase
         remove => this.SelectedHandler -= value;
     }
 
-    public PaginationMenu(string componentId, IReadOnlyList<PaginationMenuItem> items)
+    public PaginationMenu(ComponentId componentId, IReadOnlyList<PaginationMenuItem> items) : base(componentId)
     {
-        this.ComponentId = componentId;
         this.MenuItems = items;
         PaginationMenuReceiver.Register(componentId, this);
-        this.OnSelected += async (args) => { };
+        OnSelected += async (args) => { };
     }
-
-    public string ComponentId { get; }
 
     public string CancelLabel { get; set; } = "cancel";
 
@@ -77,7 +74,7 @@ public class PaginationMenu : ComponentBase
         var menuBuilder = new SelectMenuBuilder()
         {
             CustomId = GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
-                PaginationMenuReceiver.ON_SELECTED_ID, 
+                PaginationMenuReceiver.ON_SELECTED_ID,
                 this.ComponentId)
                 .ToString(),
         };
@@ -97,7 +94,7 @@ public class PaginationMenu : ComponentBase
             menuBuilder.AddOption(this.CancelLabel, this.CancelId, description);
         }
 
-        return this.SetPaginationMenuComponent(index, menuBuilder);
+        return SetPaginationMenuComponent(index, menuBuilder);
     }
 
     public ComponentBuilder SetPaginationMenuComponent(int index, SelectMenuBuilder menuBuilder)
@@ -110,7 +107,7 @@ public class PaginationMenu : ComponentBase
                 PaginationMenuReceiver.PREVIOUS_MENU_ID,
                 this.ComponentId).ToString());
         }
-        builder.WithButton(this.GetNowPageButton(index));
+        builder.WithButton(GetNowPageButton(index));
         if (index != this.PageCount - 1)
         {
             builder.WithButton($"{index + 2}", GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
@@ -125,7 +122,7 @@ public class PaginationMenu : ComponentBase
         var button = new ButtonBuilder().WithLabel($"{Emoji.Parse(":notepad_spiral:")}{index + 1}/{this.PageCount}");
         button.IsDisabled = true;
         button.Style = ButtonStyle.Danger;
-        button.CustomId = this.ComponentId;
+        button.CustomId = this.ComponentId.ToString();
         return button;
     }
 

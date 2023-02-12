@@ -1,10 +1,6 @@
-﻿using DiscordGUILib.Modules.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DiscordGUILib.Components;
+using DiscordGUILib.Modules.Attributes;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordGUILib;
 internal class GUILibCustomIdFactory
@@ -18,11 +14,11 @@ internal class GUILibCustomIdFactory
         }
         string moduleName = components[0];
         string receiverName = components[1];
-        string componentId = id.Replace($"{moduleName}-{receiverName}-", "");
+        var componentId = new ComponentId(id.Replace($"{moduleName}-{receiverName}-", ""));
         return new GUILibCustomId(moduleName, receiverName, componentId);
     }
 
-    public static GUILibCustomId CreateNew<T>(string receiverName, string componentId)
+    public static GUILibCustomId CreateNew<T>(string receiverName, ComponentId componentId)
     {
         var attribute = typeof(T).GetCustomAttribute<ComponentModuleAttribute>();
         if (attribute is null)

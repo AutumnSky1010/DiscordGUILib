@@ -1,13 +1,14 @@
-﻿using Discord;
-using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Discord.WebSocket;
 
 namespace DiscordGUILib.Components;
 public abstract class ComponentBase
 {
+    public ComponentBase(ComponentId componentId)
+    {
+        this.ComponentId = componentId;
+    }
+
     public delegate Task ErrorEventHandler(SocketMessageComponent component);
+
+    public ComponentId ComponentId { get; }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DiscordGUILib.Components;
 
 namespace DiscordGUILib;
 public class GUILibCustomId
@@ -14,13 +10,13 @@ public class GUILibCustomId
     /// <param name="receiverName"></param>
     /// <param name="componentId"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public GUILibCustomId(string moduleName, string receiverName, string componentId)
+    public GUILibCustomId(string moduleName, string receiverName, ComponentId componentId)
     {
 
         this.ModuleName = moduleName;
         this.ReceiverName = receiverName;
         this.ComponentId = componentId;
-        if (this.ToString().Length > 100)
+        if (ToString().Length > 100)
         {
             throw new ArgumentOutOfRangeException();
         }
@@ -30,10 +26,10 @@ public class GUILibCustomId
 
     public string ReceiverName { get; }
 
-    public string ComponentId { get; }
+    public ComponentId ComponentId { get; }
 
     public override string ToString()
     {
-        return $"{ModuleName}-{ReceiverName}-{ComponentId}";
+        return $"{this.ModuleName}-{this.ReceiverName}-{this.ComponentId}";
     }
 }

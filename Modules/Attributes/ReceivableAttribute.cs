@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DiscordGUILib.Modules.Attributes;
+﻿namespace DiscordGUILib.Modules.Attributes;
 [AttributeUsage(AttributeTargets.Class)]
-public class ComponentModuleAttribute : Attribute
+internal class ComponentModuleAttribute : Attribute
 {
     /// <summary>
     /// Constructor

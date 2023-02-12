@@ -1,18 +1,13 @@
 ﻿using Discord;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordGUILib.Components;
 public class ButtonDefinition
 {
     public ButtonDefinition(
-        string? label = null, 
-        ButtonStyle style = ButtonStyle.Primary, 
-        string? url = null, 
-        IEmote? emote = null, 
+        string? label = null,
+        ButtonStyle style = ButtonStyle.Primary,
+        string? url = null,
+        IEmote? emote = null,
         bool isDisabled = false)
     {
         this.Label = label;
@@ -29,6 +24,6 @@ public class ButtonDefinition
     public string? Url { get; set; }
 
     public IEmote? Emote { get; set; }
-    
+
     public bool IsDisabled { get; set; }
 }
