@@ -23,7 +23,7 @@ public class GUIModuleInitializer
 
     private static Dictionary<string, Type> NameModulePairs { get; } = new();
 
-    public static void Initialize(DiscordSocketClient client, IServiceProvider serviceProvider)
+    public static void Initialize(BaseSocketClient client)
     {
         client.ButtonExecuted += Executed;
         client.SelectMenuExecuted += Executed;

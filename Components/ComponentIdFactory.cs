@@ -26,7 +26,7 @@ public static class ComponentIdFactory<T> where T : ComponentBase
         return !ComponentBase.Exists<T>(new ComponentId(value));
     }
 
-    public static ComponentId CreateWithGuid()
+    public static ComponentId CreateFromGuid()
     {
         string value;
         do

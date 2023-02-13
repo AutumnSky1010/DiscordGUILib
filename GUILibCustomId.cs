@@ -1,7 +1,7 @@
 ﻿using DiscordGUILib.Components;
 
 namespace DiscordGUILib;
-public class GUILibCustomId
+internal class GUILibCustomId
 {
     /// <summary>
     /// Constructor

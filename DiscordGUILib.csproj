@@ -4,11 +4,24 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId />
+    <Title>DiscordGUILib</Title>
+    <Version>1.0.0-alpha</Version>
+    <Authors>AutumnSky1010</Authors>
+    <Copyright>Copyright ©2023 AutumnSky1010</Copyright>
+    <RepositoryUrl>https://github.com/AutumnSky1010/DiscordGUILib</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.9.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -18,11 +18,11 @@ internal class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
 
     [ComponentReceiver(NEXT_MENU_ID)]
     public async Task OnClickNext(SocketMessageComponent component)
-        => await ChangeQuizMenuPage(component, NEXT_MENU_ID);
+        => await ChangeQuizMenuPage(component);
 
     [ComponentReceiver(PREVIOUS_MENU_ID)]
     public async Task OnClickPrevious(SocketMessageComponent component)
-        => await ChangeQuizMenuPage(component, PREVIOUS_MENU_ID);
+        => await ChangeQuizMenuPage(component);
 
     [ComponentReceiver(ON_SELECTED_ID)]
     public async Task OnSelected(SocketMessageComponent component)
@@ -63,7 +63,7 @@ internal class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
         }
     }
 
-    private async Task ChangeQuizMenuPage(SocketMessageComponent component, string buttonCustomId)
+    private async Task ChangeQuizMenuPage(SocketMessageComponent component)
     {
         string buttonLabel = "";
         foreach (ActionRowComponent rowComponent in component.Message.Components)
@@ -73,7 +73,7 @@ internal class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
                 if (messageComponent.Type is ComponentType.Button)
                 {
                     var button = (ButtonComponent)messageComponent;
-                    if (messageComponent.CustomId == buttonCustomId)
+                    if (messageComponent.CustomId == component.Data.CustomId)
                     {
                         buttonLabel = button.Label;
                     }
@@ -85,13 +85,12 @@ internal class PaginationMenuReceiver : ReceiverBase<PaginationMenu>
         {
             return;
         }
-
-        await component.DeferAsync();
         await component.Message.ModifyAsync(msg =>
         {
             msg.Components = menuNullable.GetComponentBuilder(int.Parse(buttonLabel) - 1).Build();
             msg.Content = component.Message.Content;
         });
+        await component.DeferAsync();
     }
 
     private bool TryGetClickedMenu(SocketMessageComponent component, out PaginationMenu? menu)
