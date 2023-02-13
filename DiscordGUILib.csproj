@@ -11,6 +11,11 @@
     <Copyright>Copyright ©2023 AutumnSky1010</Copyright>
     <RepositoryUrl>https://github.com/AutumnSky1010/DiscordGUILib</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>This supports interactive UI with using the message component.</Description>
+    <PackageIcon>DiscordGUILibIcon128.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/AutumnSky1010/DiscordGUILib/wiki</PackageProjectUrl>
+    <PackageTags>discord, discordapp</PackageTags>
+    <PackageReleaseNotes>First alpha release.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DiscordGUILibIcon128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
