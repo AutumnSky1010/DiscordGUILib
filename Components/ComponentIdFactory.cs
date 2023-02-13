@@ -1,18 +1,39 @@
 ﻿namespace DiscordGUILib.Components;
-public static class ComponentIdFactory
+public static class ComponentIdFactory<T> where T : ComponentBase
 {
-    public ComponentId CreateNew(string value)
+    public static ComponentId CreateNew(string value)
     {
-
+        if (TryCreateNew(value, out ComponentId id))
+        {
+            return id;
+        }
+        throw new ArgumentException();
     }
 
-    public bool CanCreate()
+    public static bool TryCreateNew(string value, out ComponentId componentId)
     {
-
+        if (CanCreate(value))
+        {
+            componentId = new ComponentId(value);
+            return true;
+        }
+        componentId = new ComponentId("");
+        return false;
     }
 
-    public ComponentId CreateWithGuid()
+    public static bool CanCreate(string value) 
     {
+        return !ComponentBase.Exists<T>(new ComponentId(value));
+    }
 
+    public static ComponentId CreateWithGuid()
+    {
+        string value;
+        do
+        {
+            value = Guid.NewGuid().ToString();
+
+        } while (!CanCreate(value));
+        return new ComponentId(value);
     }
 }

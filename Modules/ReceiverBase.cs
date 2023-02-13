@@ -1,7 +1,7 @@
 ﻿using DiscordGUILib.Components;
 
 namespace DiscordGUILib.Modules;
-internal class ReceiverBase<T>
+internal class ReceiverBase<T> where T : ComponentBase
 {
     protected static Dictionary<ComponentId, T> IdComponentPairs { get; } = new();
 
@@ -23,5 +23,14 @@ internal class ReceiverBase<T>
     protected static void Unregister(ComponentId id)
     {
         IdComponentPairs.Remove(id);
+    }
+
+    internal static bool Exists(ComponentId id)
+    {
+        if (IdComponentPairs.TryGetValue(id, out _))
+        {
+            return true;
+        }
+        return false;
     }
 }

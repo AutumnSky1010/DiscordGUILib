@@ -1,7 +1,7 @@
 ﻿namespace DiscordGUILib.Components;
 public record ComponentId
 {
-    public ComponentId(string value)
+    internal ComponentId(string value)
     {
         if (value.Length > 50)
         {
