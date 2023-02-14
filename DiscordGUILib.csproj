@@ -7,15 +7,16 @@
     <PackageId />
     <Title>DiscordGUILib</Title>
     <Version>1.0.0-alpha</Version>
-    <Authors>AutumnSky1010</Authors>
-    <Copyright>Copyright ©2023 AutumnSky1010</Copyright>
+    <Authors>AutumnSky1010,archangel913</Authors>
+    <Copyright>Copyright ©2023 AutumnSky1010, archangel913</Copyright>
     <RepositoryUrl>https://github.com/AutumnSky1010/DiscordGUILib</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>This supports interactive UI with using the message component.</Description>
     <PackageIcon>DiscordGUILibIcon128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/AutumnSky1010/DiscordGUILib/wiki</PackageProjectUrl>
-    <PackageTags>discord, discordapp</PackageTags>
+    <PackageTags>discord,discordapp</PackageTags>
     <PackageReleaseNotes>First alpha release.</PackageReleaseNotes>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
