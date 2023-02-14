@@ -38,6 +38,12 @@ public class ToggleButton : ComponentBase
         remove => this.UncheckedHandler -= value;
     }
 
+    public ButtonDefinition Current { get => this.State.Definition; }
+
+    public ButtonDefinition NextDefinition { get => this.State.Next.Definition; }
+
+    public ButtonDefinition CurrentDefinition { get => this.State.Definition; }
+
     private IToggleButtonState State { get; set; }
 
     public bool IsChecked => this.State.IsChecked;
@@ -47,6 +53,11 @@ public class ToggleButton : ComponentBase
         this.State = this.State.Next;
     }
 
+    public void SetButtonDefinitions(ButtonDefinition @checked, ButtonDefinition unChecked)
+    {
+        IToggleButtonState state = this.IsChecked ? new CheckedState(@checked, unChecked) : new UncheckedState(unChecked, @checked);
+        this.State = state;
+    }
 
     public ComponentBuilder GetComponentBuilder()
     {
