@@ -20,19 +20,17 @@ public class ToggleButton : ComponentBase
         remove => OnErrorHandler -= value;
     }
 
-    public delegate Task ToggledHandler(ToggleButton button, SocketMessageComponent component);
+    internal ButtonPushedEventHandler<ToggleButton>? CheckedHandler;
 
-    internal ToggledHandler? CheckedHandler;
+    internal ButtonPushedEventHandler<ToggleButton>? UncheckedHandler;
 
-    internal ToggledHandler? UncheckedHandler;
-
-    public event ToggledHandler Checked
+    public event ButtonPushedEventHandler<ToggleButton> Checked
     {
         add => this.CheckedHandler += value;
         remove => this.CheckedHandler -= value;
     }
 
-    public event ToggledHandler Unchecked
+    public event ButtonPushedEventHandler<ToggleButton> Unchecked
     {
         add => this.UncheckedHandler += value;
         remove => this.UncheckedHandler -= value;
