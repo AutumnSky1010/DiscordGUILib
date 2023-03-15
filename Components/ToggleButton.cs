@@ -61,7 +61,9 @@ public class ToggleButton : ComponentBase
 
     public ComponentBuilder GetComponentBuilder()
     {
-        var customId = GUILibCustomIdFactory.CreateNew<ToggleButtonReceiver>(ToggleButtonReceiver.CHECKED_ID, this.ComponentId);
+        // isChecked = trueのとき、チェックを外すので、UNCHECKED_IDを用いる。
+        var receiverName = this.IsChecked ? ToggleButtonReceiver.UNCHECKED_ID : ToggleButtonReceiver.CHECKED_ID;
+        var customId = GUILibCustomIdFactory.CreateNew<ToggleButtonReceiver>(receiverName, this.ComponentId);
         var currentDefinition = this.State.Definition;
         var buttonBuilder = new ButtonBuilder()
             .WithLabel(currentDefinition.Label)

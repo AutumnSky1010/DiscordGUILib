@@ -7,14 +7,14 @@ internal class GUILibCustomIdFactory
 {
     public static GUILibCustomId CreateFromString(string id)
     {
-        string[] components = id.Split('-');
+        string[] components = id.Split('-', 3);
         if (components.Length < 3)
         {
             throw new FormatException();
         }
         string moduleName = components[0];
         string receiverName = components[1];
-        var componentId = new ComponentId(id.Replace($"{moduleName}-{receiverName}-", ""));
+        var componentId = new ComponentId(components[2]);
         return new GUILibCustomId(moduleName, receiverName, componentId);
     }
 

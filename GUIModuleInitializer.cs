@@ -1,6 +1,5 @@
 ﻿using Discord.WebSocket;
 using DiscordGUILib.Modules.Attributes;
-using System;
 using System.Reflection;
 
 //[Discord.Net]

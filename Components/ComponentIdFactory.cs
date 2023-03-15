@@ -21,7 +21,7 @@ public static class ComponentIdFactory<T> where T : ComponentBase
         return false;
     }
 
-    public static bool CanCreate(string value) 
+    public static bool CanCreate(string value)
     {
         return !ComponentBase.Exists<T>(new ComponentId(value));
     }
