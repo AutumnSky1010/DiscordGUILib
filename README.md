@@ -110,6 +110,22 @@ public class PaginationMenuModule : InteractionModuleBase
 }
 ```
 
+#### Pagination
+```cs
+public async Task PaginationTest()
+{
+    // Create the component id.
+    var componentId = ComponentIdFactory<ToggleButton>.CreateFromGuid();
+    // Or use, `var componentId = ComponentIdFactory<ToggleButton>.CreateNew("any string")
+    var pagination = new Pagination(componentId, 10);
+    pagination.PageChanged += async (pagination, component) =>
+    {
+        await component.DeferAsync();
+    };
+    await RespondAsync("pagination", components: pagination.GetComponentBuilder().Build());
+}
+```
+
 ### Error Handling of command
 Can't use the component was sent before restart bot. It's because the instance of the component was lost when close the bot.  
 ```cs
