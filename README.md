@@ -185,9 +185,17 @@ If you disable the component, you must call ToDisable().
 ```cs
 component.ToDisable();
 ```
-For example,
+Example: `PaginationMenu` will be disabled when an item is selected.
 ```cs
-
+pagination.OnSelected += async (args) =>
+{
+    await args.Component.RespondAsync($"You select {args.SelectedItem.Label}.");
+    // ComponentBase derived to PaginationMenu, ChainButton, etc.
+    ComponentBase component = args.PaginationMenu;
+    SocketMessageComponent messageComponent = args.Component;
+    component.ToDisable();
+    await messageComponent.Message.DeleteAsync();
+};
 ```
 
 ## 👀Features
