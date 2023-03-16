@@ -36,9 +36,18 @@ public class PaginationMenu : ComponentBase
     public PaginationMenu(ComponentId componentId, IReadOnlyList<PaginationMenuItem> items) : base(componentId)
     {
         this.MenuItems = items;
-        PaginationMenuReceiver.Register(componentId, this);
         OnSelected += async (args) => { };
+        this.Pagination = new Pagination(componentId, this.PageCount);
+        this.Pagination.PageChanged += async (pagination, component) =>
+        {
+            var newComponents = GetComponentBuilder().Build();
+            await component.Channel.ModifyMessageAsync(component.Message.Id, msg => msg.Components = newComponents);
+            await component.DeferAsync();
+        };
+        PaginationMenuReceiver.Register(componentId, this);
     }
+
+    private Pagination Pagination { get; }
 
     public string CancelLabel { get; set; } = "cancel";
 
@@ -49,6 +58,8 @@ public class PaginationMenu : ComponentBase
     public bool HasCancelButton { get; set; } = true;
 
     public int CountPerPage { get; } = 10;
+
+    public int CurrentPage { get => this.Pagination.CurrentPage; }
 
     public int PageCount
     {
@@ -63,14 +74,10 @@ public class PaginationMenu : ComponentBase
         }
     }
 
-
     public IReadOnlyList<PaginationMenuItem> MenuItems { get; set; }
 
-    public ComponentBuilder GetComponentBuilder(int index = 0)
+   internal override ComponentBuilder AddComponentTo(ComponentBuilder componentBuilder)
     {
-        index = index < 0 ? 0 : index;
-        index = index > this.PageCount - 1 ? this.PageCount : index;
-
         var menuBuilder = new SelectMenuBuilder()
         {
             CustomId = GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
@@ -79,12 +86,13 @@ public class PaginationMenu : ComponentBase
                 .ToString(),
         };
 
-        int itemsStartIndex = index * this.CountPerPage;
+        // インデックスは０スタートなので、現在ページ - 1
+        int itemsStartIndex = (this.Pagination.CurrentPage - 1) * this.CountPerPage;
         int currentIndex = itemsStartIndex;
         for (int i = 0; i < this.CountPerPage && this.MenuItems.Count > currentIndex; i++, currentIndex++)
         {
             var item = this.MenuItems[currentIndex];
-            string? desctiption = item.Description.Length < 1 ? null : item.Description;
+            string? desctiption = item.Description.Length == 0 ? null : item.Description;
             menuBuilder.AddOption(item.Label, item.Id, desctiption);
         }
 
@@ -93,37 +101,8 @@ public class PaginationMenu : ComponentBase
         {
             menuBuilder.AddOption(this.CancelLabel, this.CancelId, description);
         }
-
-        return SetPaginationMenuComponent(index, menuBuilder);
-    }
-
-    public ComponentBuilder SetPaginationMenuComponent(int index, SelectMenuBuilder menuBuilder)
-    {
-        var builder = new ComponentBuilder();
-        builder.WithSelectMenu(menuBuilder);
-        if (index != 0)
-        {
-            builder.WithButton($"{index}", GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
-                PaginationMenuReceiver.PREVIOUS_MENU_ID,
-                this.ComponentId).ToString());
-        }
-        builder.WithButton(GetNowPageButton(index));
-        if (index != this.PageCount - 1)
-        {
-            builder.WithButton($"{index + 2}", GUILibCustomIdFactory.CreateNew<PaginationMenuReceiver>(
-                PaginationMenuReceiver.NEXT_MENU_ID,
-                this.ComponentId).ToString());
-        }
-        return builder;
-    }
-
-    private ButtonBuilder GetNowPageButton(int index)
-    {
-        var button = new ButtonBuilder().WithLabel($"{Emoji.Parse(":notepad_spiral:")}{index + 1}/{this.PageCount}");
-        button.IsDisabled = true;
-        button.Style = ButtonStyle.Danger;
-        button.CustomId = this.ComponentId.ToString();
-        return button;
+        componentBuilder.WithSelectMenu(menuBuilder);
+        return this.Pagination.AddComponentTo(componentBuilder);
     }
 
     public bool TryGetItem(string id, out PaginationMenuItem? item)
@@ -136,6 +115,11 @@ public class PaginationMenu : ComponentBase
         }
         item = null;
         return false;
+    }
+
+    protected override void Unregister()
+    {
+        PaginationMenuReceiver.Unregister(this.ComponentId);
     }
 }
 

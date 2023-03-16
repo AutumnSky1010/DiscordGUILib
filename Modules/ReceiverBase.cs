@@ -5,12 +5,12 @@ internal class ReceiverBase<T> where T : ComponentBase
 {
     protected static Dictionary<ComponentId, T> IdComponentPairs { get; } = new();
 
-    internal static void Register(ComponentId id, T component)
+    public static void Register(ComponentId id, T component)
     {
         TryRegister(id, component);
     }
 
-    internal static bool TryRegister(ComponentId id, T component)
+    public static bool TryRegister(ComponentId id, T component)
     {
         if (IdComponentPairs.TryGetValue(id, out var value))
         {
@@ -20,12 +20,12 @@ internal class ReceiverBase<T> where T : ComponentBase
         return true;
     }
 
-    protected static void Unregister(ComponentId id)
+    public static void Unregister(ComponentId id)
     {
         IdComponentPairs.Remove(id);
     }
 
-    internal static bool Exists(ComponentId id)
+    public static bool Exists(ComponentId id)
     {
         if (IdComponentPairs.TryGetValue(id, out _))
         {

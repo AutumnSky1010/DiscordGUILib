@@ -57,7 +57,7 @@ public class ToggleButton : ComponentBase
         this.State = state;
     }
 
-    public ComponentBuilder GetComponentBuilder()
+    internal override ComponentBuilder AddComponentTo(ComponentBuilder componentBuilder)
     {
         // isChecked = trueのとき、チェックを外すので、UNCHECKED_IDを用いる。
         var receiverName = this.IsChecked ? ToggleButtonReceiver.UNCHECKED_ID : ToggleButtonReceiver.CHECKED_ID;
@@ -70,8 +70,13 @@ public class ToggleButton : ComponentBase
             .WithUrl(currentDefinition.Url)
             .WithEmote(currentDefinition.Emote)
             .WithDisabled(currentDefinition.IsDisabled);
-        ComponentBuilder builder = new ComponentBuilder().WithButton(buttonBuilder);
-        return builder;
+        componentBuilder.WithButton(buttonBuilder);
+        return componentBuilder;
+    }
+
+    protected override void Unregister()
+    {
+        ToggleButtonReceiver.Unregister(this.ComponentId);
     }
 
     private interface IToggleButtonState

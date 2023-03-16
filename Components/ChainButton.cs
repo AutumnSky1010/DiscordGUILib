@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.WebSocket;
 using DiscordGUILib.Modules;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ public class ChainButton : ComponentBase
         get => this.States[this.CurrentIndex];
     }
 
-    public ComponentBuilder GetComponentBuilder()
+    internal override ComponentBuilder AddComponentTo(ComponentBuilder componentBuilder)
     {
         var receiverName = ChainButtonReceiver.PUSHED;
         var customId = GUILibCustomIdFactory.CreateNew<ChainButtonReceiver>(receiverName, this.ComponentId);
@@ -49,8 +50,8 @@ public class ChainButton : ComponentBase
             .WithUrl(currentDefinition.Url)
             .WithEmote(currentDefinition.Emote)
             .WithDisabled(currentDefinition.IsDisabled);
-        ComponentBuilder builder = new ComponentBuilder().WithButton(buttonBuilder);
-        return builder;
+        componentBuilder = new ComponentBuilder().WithButton(buttonBuilder);
+        return componentBuilder;
     }
 
     public void Push()
@@ -61,5 +62,10 @@ public class ChainButton : ComponentBase
             return;
         }
         this.CurrentIndex++;
+    }
+
+    protected override void Unregister()
+    {
+        ChainButtonReceiver.Unregister(this.ComponentId);
     }
 }
