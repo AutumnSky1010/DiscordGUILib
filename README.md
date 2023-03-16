@@ -73,6 +73,42 @@ public class ToggleModule : InteractionModuleBase
     }
 }
 ```
+
+#### Chain button
+```cs
+[SlashCommand("chain_button", "send the chain button")]
+public async Task ChainTest()
+{
+    var state1 = new ChainButtonState(new ButtonDefinition("1", ButtonStyle.Danger, emote: Emoji.Parse(":one:")));
+    state1.Pushed += async (button, component) =>
+    {
+        await component.RespondAsync("2");
+    };
+
+    var state2 = new ChainButtonState(new ButtonDefinition("2", ButtonStyle.Primary, emote: Emoji.Parse(":two:")));
+    state2.Pushed += async (button, component) =>
+    {
+       await component.RespondAsync("3");
+    };
+
+    var state3 = new ChainButtonState(new ButtonDefinition("3", ButtonStyle.Success, emote: Emoji.Parse(":three:")));
+    state3.Pushed += async (button, component) =>
+    {
+        await component.RespondAsync("1");
+    };
+    var states = new List<ChainButtonState>() { state1, state2, state3 };
+
+    // Create the component id.
+    var componentId = ComponentIdFactory<ToggleButton>.CreateFromGuid();
+    // Or use, `var componentId = ComponentIdFactory<ToggleButton>.CreateNew("any string");`
+
+    // Create the instance of chain button.
+    var chainButton = new ChainButton(componentId, states);
+
+    await RespondAsync("chain button", components: chainButton.GetComponentBuilder().Build());
+}
+```
+
 #### Pagination Menu
 ![image2](https://user-images.githubusercontent.com/66455966/218487504-4ff6ee79-bf18-4b3f-87da-a4979e5fc064.png)
 ```cs
@@ -110,6 +146,22 @@ public class PaginationMenuModule : InteractionModuleBase
 }
 ```
 
+#### Pagination
+```cs
+public async Task PaginationTest()
+{
+    // Create the component id.
+    var componentId = ComponentIdFactory<ToggleButton>.CreateFromGuid();
+    // Or use, `var componentId = ComponentIdFactory<ToggleButton>.CreateNew("any string")
+    var pagination = new Pagination(componentId, 10);
+    pagination.PageChanged += async (pagination, component) =>
+    {
+        await component.DeferAsync();
+    };
+    await RespondAsync("pagination", components: pagination.GetComponentBuilder().Build());
+}
+```
+
 ### Error Handling of command
 Can't use the component was sent before restart bot. It's because the instance of the component was lost when close the bot.  
 ```cs
@@ -128,9 +180,21 @@ public class ModuleTest : InteractionModuleBase
 }
 ```
 
+### Dispose component
+If you disable the component, you must call ToDisable().
+```cs
+component.ToDisable();
+```
+For example,
+```cs
+
+```
+
 ## 👀Features
 ### Kind of the component
 - Toggle button
+- Chain button
+- Pagination
 - Pagination menu
 
 ## 🍄Author
