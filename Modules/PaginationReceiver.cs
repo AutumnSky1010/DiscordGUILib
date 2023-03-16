@@ -17,6 +17,14 @@ internal class PaginationReceiver : ReceiverBase<Pagination>
 
     public const string PREV = "prev";
 
+    public const string DUMMY = "current";
+
+    [ComponentReceiver(DUMMY)]
+    public async Task Current(SocketMessageComponent component)
+    {
+        await component.DeferAsync();
+    }
+
     [ComponentReceiver(NEXT)]
     public async Task Next(SocketMessageComponent component)
     {

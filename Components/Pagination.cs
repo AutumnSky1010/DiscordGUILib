@@ -54,19 +54,19 @@ public class Pagination : ComponentBase
 
     internal override ComponentBuilder AddComponentTo(ComponentBuilder componentBuilder)
     {
-        if (this.CurrentPage != 1)
-        {
-            componentBuilder.WithButton($"{this.CurrentPage - 1}", GUILibCustomIdFactory.CreateNew<PaginationReceiver>(
-                PaginationReceiver.PREV,
-                this.ComponentId).ToString());
-        }
+        string? label = this.CurrentPage == 1 ? "_" : $"{this.CurrentPage - 1}";
+
+        componentBuilder.WithButton(label, GUILibCustomIdFactory.CreateNew<PaginationReceiver>(
+            PaginationReceiver.PREV,
+            this.ComponentId).ToString());
+
         componentBuilder.WithButton(GetNowPageButton());
-        if (this.CurrentPage != this.MaxPage)
-        {
-            componentBuilder.WithButton($"{this.CurrentPage + 1}", GUILibCustomIdFactory.CreateNew<PaginationReceiver>(
-                PaginationReceiver.NEXT,
-                this.ComponentId).ToString());
-        }
+        label = this.CurrentPage == this.MaxPage ? "_" : $"{this.CurrentPage + 1}";
+
+        componentBuilder.WithButton(label, GUILibCustomIdFactory.CreateNew<PaginationReceiver>(
+            PaginationReceiver.NEXT,
+            this.ComponentId).ToString());
+
         return componentBuilder;
     }
 
@@ -78,9 +78,10 @@ public class Pagination : ComponentBase
     private ButtonBuilder GetNowPageButton()
     {
         var button = new ButtonBuilder().WithLabel($"{Emoji.Parse(":notepad_spiral:")}{this.CurrentPage}/{this.MaxPage}");
-        button.IsDisabled = true;
         button.Style = ButtonStyle.Danger;
-        button.CustomId = this.ComponentId.ToString();
+        button.CustomId = GUILibCustomIdFactory.CreateNew<PaginationReceiver>(
+                PaginationReceiver.DUMMY,
+                this.ComponentId).ToString();
         return button;
     }
 }
